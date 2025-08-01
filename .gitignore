@@ -1,1 +1,9 @@
 /build/
+node_modules/
+.settings/
+target/
+ejbModule/
+.project
+package-lock.json
+package.json
+.classpath
