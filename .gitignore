@@ -7,3 +7,4 @@ ejbModule/
 package-lock.json
 package.json
 .classpath
+.idea/
