@@ -30,22 +30,18 @@ public class Application {
 
     return builder
         .routes()
-        .route(
-            predicateSpec ->
-                predicateSpec
-                    .path("/get")
-                    .filters(filterSpec -> filterSpec.addRequestHeader("Hello", "World"))
-                    .uri(httpUri))
-        .route(
-            predicateSpec ->
-                predicateSpec
-                    .host("*.circuitbreaker.com")
-                    .filters(
-                        filterSpec ->
-                            filterSpec.circuitBreaker(
-                                config ->
-                                    config.setName("mycmd").setFallbackUri("forward:/fallback")))
-                    .uri(httpUri))
+        .route(predicateSpec ->
+            predicateSpec
+                .path("/get")
+                .filters(filterSpec -> filterSpec.addRequestHeader("Hello", "World"))
+                .uri(httpUri))
+        .route(predicateSpec ->
+            predicateSpec
+                .host("*.circuitbreaker.com")
+                .filters(filterSpec ->
+                    filterSpec.circuitBreaker(
+                        config -> config.setName("mycmd").setFallbackUri("forward:/fallback")))
+                .uri(httpUri))
         .build();
   }
 

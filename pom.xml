@@ -13,11 +13,26 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Demo to showcase spring gateway</name>
   <description>Demo project for Spring Boot</description>
-  
+
   <properties>
     <java.version>17</java.version>
     <spring-cloud.version>2025.0.0</spring-cloud.version>
+    <spotless.version>3.11.0</spotless.version>
+    <prettier.version>3.8.1</prettier.version>
+    <prettier.plugin.xml.version>3.4.2</prettier.plugin.xml.version>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
@@ -45,18 +60,6 @@
     </dependency>
   </dependencies>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-dependencies</artifactId>
-        <version>${spring-cloud.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <build>
     <plugins>
       <plugin>
@@ -67,6 +70,73 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <version>4.0.0-M16</version>
+      </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.version}</version>
+        <configuration>
+          <java>
+            <googleJavaFormat>
+              <style>GOOGLE</style>
+              <reflowLongStrings>true</reflowLongStrings>
+              <formatJavadoc>true</formatJavadoc>
+            </googleJavaFormat>
+          </java>
+          <pom>
+            <includes>
+              <include>**/pom.xml</include>
+            </includes>
+            <sortPom/>
+          </pom>
+          <formats>
+            <format>
+              <includes>
+                <include>**/*.xml</include>
+              </includes>
+              <excludes>
+                <exclude>**/pom.xml</exclude>
+                <exclude>**/target/**</exclude>
+                <exclude>**/node_modules/**</exclude>
+              </excludes>
+              <trimTrailingWhitespace/>
+              <endWithNewline/>
+              <prettier>
+                <devDependencyProperties>
+                  <property>
+                    <name>prettier</name>
+                    <value>${prettier.version}</value>
+                  </property>
+                  <property>
+                    <name>@prettier/plugin-xml</name>
+                    <value>${prettier.plugin.xml.version}</value>
+                  </property>
+                </devDependencyProperties>
+                <config>
+                  <printWidth>120</printWidth>
+                  <tabWidth>2</tabWidth>
+                  <plugins>@prettier/plugin-xml</plugins>
+                </config>
+              </prettier>
+            </format>
+          </formats>
+          <json>
+            <includes>
+              <include>**/*.json</include>
+            </includes>
+            <excludes>
+              <exclude>**/target/**</exclude>
+              <exclude>**/node_modules/**</exclude>
+              <exclude>**/.devcontainer/*.json</exclude>
+              <exclude>**/.github/linters/*.json</exclude>
+            </excludes>
+            <gson>
+              <indentSpaces>2</indentSpaces>
+              <sortByKeys>false</sortByKeys>
+              <escapeHtml>false</escapeHtml>
+            </gson>
+          </json>
+        </configuration>
       </plugin>
     </plugins>
   </build>
